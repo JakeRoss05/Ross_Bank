@@ -85,7 +85,8 @@ public class Ross_Bank {
                 System.out.println("1. Wire");
                 System.out.println("2. Deposit");
                 System.out.println("3. Check Balance");
-                System.out.println("4. Logout");
+                System.out.println("4. Transaction History");
+                System.out.println("5. Logout");
                 
                 option = userinput.nextLine().trim();
                 double balance = currentUser.getBalance();
@@ -112,6 +113,7 @@ public class Ross_Bank {
                         }
                         balance -= amount;//subtracting the amount from the balance
                         currentUser.setBalance(balance);
+                        currentUser.recordTransaction("WITHDRAWAL", amount);
                         System.out.println("Wire has been successful. Thank you for banking with Ross. Updated Balance: " + String.format("%.2f", balance));
                         //terminating the loop
                     }
@@ -132,12 +134,14 @@ public class Ross_Bank {
                         }
                         balance += amount;//adding the amount to the balance
                         currentUser.setBalance(balance);
+                        currentUser.recordTransaction("DEPOSIT", amount);
                         System.out.println("Deposit has been successful. Thank you for banking with Ross. Updated Balance: " + String.format("%.2f", balance));
                     }
                     case "3" -> System.out.println("Account Balance: " + String.format("%.2f", balance));
-                    case "4" -> System.out.println("Goodbye. Thank you for banking with Ross");
+                    case "4" -> currentUser.displayTransactionHistory();
+                    case "5" -> System.out.println("Goodbye. Thank you for banking with Ross");
                 }
-            } while (!option.equals("4"));
+            } while (!option.equals("5"));
         }
     }
 }
