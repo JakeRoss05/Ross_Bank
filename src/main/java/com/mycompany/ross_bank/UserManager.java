@@ -32,4 +32,5 @@ public class UserManager {
     public boolean userExists(String username) {
         return accounts.containsKey(username);
     }
+
 }
