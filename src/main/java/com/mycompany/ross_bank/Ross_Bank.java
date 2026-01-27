@@ -1,18 +1,19 @@
 package com.mycompany.ross_bank;
 
+//impoting parseDouble to convert strings to double values and a scanner to read user input
 import static java.lang.Double.parseDouble;
 import java.util.Scanner;
 
 public class Ross_Bank {
 
     public static void main(String[] args) {
-        try ( //scanner created to be able to read the user's input
-                Scanner userinput = new Scanner(System.in)) {
-            UserManager userManager = new UserManager();
-            Account currentUser = null;
+        try ( 
+                Scanner userinput = new Scanner(System.in)) { //scanner created to be able to read the user's input
+            UserManager userManager = new UserManager(); //userManager object created to manage user accounts
+            Account currentUser = null; //variable to store the currently logged-in user    
             
             // Authentication menu - user must create or login first
-            boolean authenticated = false;
+            boolean authenticated = false; //variable to track if the user is authenticated
             while (!authenticated) {
                 System.out.println("\n==== Welcome to Ross Bank ====");
                 System.out.println("1. Create Account");
@@ -20,28 +21,28 @@ public class Ross_Bank {
                 System.out.println("3. Exit");
                 System.out.print("Choose an option: ");
                 
-                String authOption = userinput.nextLine().trim();
+                String authOption = userinput.nextLine().trim(); //reading the users input, taking and storing it as a string and trimming any extra spaces
                 
                 switch (authOption) {
                     case "1" -> {
                         // Create account
                         System.out.print("Enter username: ");
                         String newUsername = userinput.nextLine().trim();
-                        if (newUsername.isEmpty()) {
+                        if (newUsername.isEmpty()) { //checking if the username is empty
                             System.out.println("Username cannot be empty");
-                            break;
+                            break; //exiting the case
                         }
-                        if (userManager.userExists(newUsername)) {
+                        if (userManager.userExists(newUsername)) { //checking if the username already exists
                             System.out.println("Username already exists. Please try another.");
                             break;
                         }
                         System.out.print("Enter password: ");
                         String newPassword = userinput.nextLine().trim();
-                        if (newPassword.isEmpty()) {
+                        if (newPassword.isEmpty()) { //checking if the password is empty
                             System.out.println("Password cannot be empty");
                             break;
                         }
-                        if (userManager.createAccount(newUsername, newPassword)) {
+                        if (userManager.createAccount(newUsername, newPassword)) { //creating the account
                             System.out.println("Account created successfully! You can now login.");
                         }
                     }
@@ -53,28 +54,28 @@ public class Ross_Bank {
                         System.out.print("Enter password: ");
                         String password = userinput.nextLine().trim();
                         
-                        currentUser = userManager.login(username, password);
-                        if (currentUser != null) {
+                        currentUser = userManager.login(username, password); //attempting to login with the provided username and password
+                        if (currentUser != null) { //checking if the login was successful
                             System.out.println("Login successful! Welcome, " + username + "!");
-                            authenticated = true;
+                            authenticated = true; //setting authenticated to true to exit the loop
                         } else {
-                            System.out.println("Invalid username or password. Please try again.");
+                            System.out.println("Invalid username or password. Please try again."); //what happens when the logins incorrect
                         }
                     }
                         
                     case "3" -> {
                         // Exit
                         System.out.println("Thank you for banking with Ross. Goodbye!");
-                        userinput.close();
-                        return;
+                        userinput.close(); //closing the scanner
+                        return; //exiting the program
                     }
                         
-                    default -> System.out.println("Invalid option. Please try again.");
+                    default -> System.out.println("Invalid option. Please try again."); //handling invalid menu options
                 }
             }
             
             // Bank operations menu (after successful login)
-            String option;
+            String option; //variable to store the user's menu option
             if (currentUser == null) {
                 System.out.println("Error: User not authenticated");
                 return;
@@ -121,27 +122,27 @@ public class Ross_Bank {
                         //case for depositing money
                         System.out.println("Enter amount that you would like to deposit");
                         amtstring = userinput.nextLine().trim();
-                        double amount;
+                        double amount; //updating the double "amount"
                         try{
                             amount = parseDouble(amtstring);
                         } catch (NumberFormatException e) { //catching when Java fails to convert the sting into a number and tell the user to enter a correct one this time
                             System.out.println("Please enter a number");
                             break;
                         }
-                        if (amount <=0) {
+                        if (amount <=0) { //checking if the amount is less than or equal to 0
                             System.out.println("Deposit must be greater than 0");
                             break;
                         }
                         balance += amount;//adding the amount to the balance
-                        currentUser.setBalance(balance);
-                        currentUser.recordTransaction("DEPOSIT", amount);
+                        currentUser.setBalance(balance); //updating the balance in the account
+                        currentUser.recordTransaction("DEPOSIT", amount); //recording the transaction
                         System.out.println("Deposit has been successful. Thank you for banking with Ross. Updated Balance: " + String.format("%.2f", balance));
                     }
-                    case "3" -> System.out.println("Account Balance: " + String.format("%.2f", balance));
-                    case "4" -> currentUser.displayTransactionHistory();
-                    case "5" -> System.out.println("Goodbye. Thank you for banking with Ross");
+                    case "3" -> System.out.println("Account Balance: " + String.format("%.2f", balance)); //displaying the balance formatted to 2 decimal places
+                    case "4" -> currentUser.displayTransactionHistory(); //displaying the transaction history
+                    case "5" -> System.out.println("Goodbye. Thank you for banking with Ross"); 
                 }
-            } while (!option.equals("5"));
+            } while (!option.equals("5")); //loop continues until you logout
         }
     }
 }
